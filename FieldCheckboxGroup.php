@@ -24,7 +24,7 @@ class FieldCheckboxGroup extends FormField {
 	 */
 	public function __construct(string $name, $value, array $options = [], array $context = []) {
 		$this->options = $options;
-		$this->formatFlags = $context['formatFlags'] ?? false;
+		$this->formatFlags = $context['flags'] ?? false;
 		parent::__construct($name, $value, $context);
 	}
 	
@@ -52,18 +52,17 @@ class FieldCheckboxGroup extends FormField {
 		if (is_bool($value)) {
 			$value = (int) $value;
 		}
-		if ($this->formatFlags) {
-			$flags = (int) $value;
-			$value = [];
-			for ($i = 1; $i <= $flags; $i *= 2) {
-				if ($i & $flags) {
-					$value[] = $i;
+		if (!is_array($value)) {
+			if ($this->formatFlags) {
+				$flags = (int) $value;
+				$value = [];
+				for ($i = 1; $i <= $flags; $i *= 2) {
+					if ($i & $flags) {
+						$value[] = $i;
+					}
 				}
-			}
-		} else {
-			if (!is_array($value)) {
+			} else {
 				$value = $value ? [$value] : [];
-
 			}
 		}
 		parent::setValue($value);
